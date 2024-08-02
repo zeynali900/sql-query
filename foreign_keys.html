@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>list all the foreign keys of a table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            text-align: center;
+            max-width: 1000px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        pre {
+            text-align: left;
+            background-color: #222222;
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>list all the foreign keys of a table</h1>
+        <section>
+            <pre><code>
+sp_help 'dbo.TableName'
+			
+-------------------
+			
+SELECT 
+    fk.name AS ForeignKeyName,
+    tp.name AS [Table],
+    cp.name AS [Column],
+    tr.name AS ReferencedTable,
+    cr.name AS ReferencedColumn,
+    s.name AS SchemaName
+FROM 
+    sys.foreign_keys fk
+INNER JOIN 
+    sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id
+INNER JOIN 
+    sys.tables tp ON fk.parent_object_id = tp.object_id
+INNER JOIN 
+    sys.schemas s ON tp.schema_id = s.schema_id
+INNER JOIN 
+    sys.columns cp ON fkc.parent_object_id = cp.object_id AND fkc.parent_column_id = cp.column_id
+INNER JOIN
+	sys.tables tr ON fk.referenced_object_id = tr.object_id
+INNER JOIN 
+    sys.columns cr ON fkc.referenced_object_id = cr.object_id AND fkc.referenced_column_id = cr.column_id
+WHERE 
+    tp.name = 'task'
+    AND s.name = 'pm'
+ORDER BY 
+    fk.name, fkc.constraint_column_id;
+            </code></pre>
+        </section>
+    </div>
+</body>
+</html>

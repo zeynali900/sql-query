@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>See the average fragmentation of indexes of a table.</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            text-align: center;
+            max-width: 1000px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        pre {
+            text-align: left;
+            background-color: #222222;
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>See the average fragmentation of indexes of a table.</h1>
+        <section>
+            <pre><code>
+SELECT 
+    OBJECT_NAME(ps.object_id) AS TableName,
+    i.name AS IndexName,
+    ps.index_id,
+    ps.avg_fragmentation_in_percent,
+    ps.page_count
+FROM 
+    sys.dm_db_index_physical_stats(DB_ID(), NULL, NULL, NULL, 'LIMITED') AS ps
+    INNER JOIN 
+    sys.indexes AS i 
+    ON ps.object_id = i.object_id AND ps.index_id = i.index_id
+    INNER JOIN 
+    sys.tables t on t.object_id=i.object_id 
+    INNER JOIN  
+    sys.schemas sc on t.schema_id=sc.schema_id
+WHERE 
+    ps.index_id > 0 -- Exclude heap indexes
+	and sc.name='dbo'
+	and t.name='TableName'
+ORDER BY 
+    ps.avg_fragmentation_in_percent DESC; 
+            </code></pre>
+        </section>
+    </div>
+</body>
+</html>
