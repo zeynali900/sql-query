@@ -46,12 +46,12 @@
         <section>
             <pre><code>
 SELECT 
+    c.name AS ColumnName,
     i.name AS IndexName,
     i.type_desc AS IndexType,
     i.is_unique AS IsUnique,
     i.is_primary_key AS IsPrimaryKey,
     i.is_unique_constraint AS IsUniqueConstraint,
-    c.name AS ColumnName,
     ic.is_descending_key AS IsDescending,
     ic.is_included_column AS IsIncluded
 FROM 
@@ -67,9 +67,9 @@ INNER JOIN 
 WHERE 
     t.name = 'Task'
     AND s.name = 'pm'
-	AND ic.is_included_column=0
+    AND ic.is_included_column=0
 ORDER BY 
-    c.name 
+    c.name, i.name, ic.is_included_column
             </code></pre>
         </section>
     </div>

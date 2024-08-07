@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>list all the indexes of a table or view</title>
+    <title>You can user sp_helptext system stored procedure to see the definition of Stored Procedures, User-Defined Functions, Triggers, Views</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,39 +42,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>list all the indexes of a table or view</h1>
+        <h1>You can user sp_helptext system stored procedure to see the definition of Stored Procedures, User-Defined Functions, Views, and Triggers</h1>
         <section>
             <pre><code>
-sp_helpindex 'dbo.TableName'
+sp_helptext 'dbo.sp_Example'
+			
+sp_helptext 'dbo.fn_Example'
 
--------------------------
+sp_helptext 'dbo.vw_Example'
 
-SELECT 
-    i.name IndexName,
-    c.name ColumnName,
-    ic.is_included_column IsIncluded,
-    ic.key_ordinal AS ColumnOrder,
-    i.type_desc IndexType,
-    i.is_unique IsUnique,
-    i.is_primary_key IsPrimaryKey,
-    i.is_unique_constraint IsUniqueConstraint,
-    ic.is_descending_key IsDescending
-FROM 
-    sys.indexes i
-INNER JOIN 
-    sys.index_columns ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id
-INNER JOIN 
-    sys.columns c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
-INNER JOIN 
-    sys.tables t ON i.object_id = t.object_id
-INNER JOIN 
-    sys.schemas s ON t.schema_id = s.schema_id
-WHERE 
-    t.name = 'Task'
-    AND s.name = 'pm'
-    --AND ic.is_included_column=0
-ORDER BY 
-    i.name, ic.is_included_column, ic.key_ordinal, c.name
+sp_helptext 'dbo.tr_Example'
+			
             </code></pre>
         </section>
     </div>
