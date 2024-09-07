@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>list all the foreign keys of a table</title>
+    <title>List all the procedures in a particular schema</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,39 +42,18 @@
 </head>
 <body>
     <div class="container">
-        <h1>list all the foreign keys of a table</h1>
+        <h1>List all the procedures in a particular schema</h1>
         <section>
             <pre><code>
-sp_help 'dbo.TableName'
-			
--------------------
-			
-SELECT 
-    fk.name AS ForeignKeyName,
-    tp.name AS [Table],
-    cp.name AS [Column],
-    tr.name AS ReferencedTable,
-    cr.name AS ReferencedColumn,
-    s.name AS SchemaName
-FROM 
-    sys.foreign_keys fk
-INNER JOIN 
-    sys.foreign_key_columns fkc ON fk.object_id = fkc.constraint_object_id
-INNER JOIN 
-    sys.tables tp ON fk.parent_object_id = tp.object_id
-INNER JOIN 
-    sys.schemas s ON tp.schema_id = s.schema_id
-INNER JOIN 
-    sys.columns cp ON fkc.parent_object_id = cp.object_id AND fkc.parent_column_id = cp.column_id
-INNER JOIN
-	sys.tables tr ON fk.referenced_object_id = tr.object_id
-INNER JOIN 
-    sys.columns cr ON fkc.referenced_object_id = cr.object_id AND fkc.referenced_column_id = cr.column_id
-WHERE 
-    tp.name = 'TableName'
-    AND s.name = 'SchemaName'
-ORDER BY 
-    fk.name, fkc.constraint_column_id;
+SELECT 
+    SPECIFIC_NAME AS ProcedureName,
+    ROUTINE_SCHEMA AS SchemaName
+FROM 
+    INFORMATION_SCHEMA.ROUTINES
+WHERE 
+    ROUTINE_TYPE = 'PROCEDURE'
+    AND ROUTINE_SCHEMA = 'YourSchemaName';
+
             </code></pre>
         </section>
     </div>

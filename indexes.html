@@ -70,8 +70,8 @@ INNER JOIN
 INNER JOIN 
     sys.schemas s ON t.schema_id = s.schema_id
 WHERE 
-    t.name = 'Task'
-    AND s.name = 'pm'
+    t.name = 'TableName'
+    AND s.name = 'dbo'
     --AND ic.is_included_column=0
 ORDER BY 
     i.name, ic.is_included_column, ic.key_ordinal, c.name

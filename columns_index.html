@@ -65,8 +65,8 @@ INNER JOIN 
 INNER JOIN 
     sys.schemas AS s ON t.schema_id = s.schema_id
 WHERE 
-    t.name = 'Task'
-    AND s.name = 'pm'
+    t.name = 'TableName'
+    AND s.name = 'SchemaName'
     AND ic.is_included_column=0
 ORDER BY 
     c.name, i.name, ic.is_included_column
